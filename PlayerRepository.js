@@ -1,29 +1,18 @@
-class PlayerRepository
-{
-    #players;
-    constructor()
-    {
-        this.#players = [];
-    }
+class PlayerRepository {
+  constructor() {
+    this.players = [];
+  }
 
-    AddPlayer(player)
-    {
-        this.#players.push(player);
-    }
-    RemovePlayer(player)
-    {
-        let index = this.#players.indexOf(player)
-        if (index > -1)
-        {
-            this.#players.slice(index, 1);
-        }
-    }
-    GetPlayers()
-    {
-        return this.#players;
-    }
-    
+  AddPlayer(player) {
+    this.players.push(player);
+  }
+  RemovePlayerById(socketid) {
+    this.players = this.players.filter((data) => data.socketid != socketid);
+    console.log(this.players.length);
+  }
+  GetPlayers() {
+    return this.players;
+  }
 }
 
-
-module.exports = {PlayerRepository};
+module.exports = { PlayerRepository };
