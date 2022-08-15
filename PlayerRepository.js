@@ -8,10 +8,12 @@ class PlayerRepository {
   }
   RemovePlayerById(socketid) {
     this.players = this.players.filter((data) => data.socketid != socketid);
-    console.log(this.players.length);
   }
   GetPlayers() {
     return this.players;
+  }
+  FindPlayerById(socketid) {
+    return this.players.find((player) => player.GetSocketId() == socketid);
   }
 }
 
