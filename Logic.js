@@ -1,21 +1,20 @@
 class Logic {
-  #playerRepository;
-  #endGame;
-
   constructor(playerRepository) {
-    this.#playerRepository = playerRepository;
-    this.#endGame = true;
+    this.playerRepository = playerRepository;
+    this.endGame = true;
+    this.gameLoop = null;
   }
-  StartGame() {
-    //TODO SETTIMEOUT
+  StartGame(tps) {
+    console.log("Starting the game");
+    this.gameLoop = setInterval(() => this.Tick(), 1000 / 60);
   }
   Tick() {
-    this.#playerRepository.GetPlayers().forEach((player) => {
+    this.playerRepository.players.forEach((player) => {
       player.Tick();
     });
   }
   HandleInput(data) {
-    const findPlayer = this.#playerRepository.FindPlayerById(data.clientid);
+    const findPlayer = this.playerRepository.FindPlayerById(data.clientid);
     if (data.data == "ArrowDown") {
       findPlayer.MoveDown();
     } else if (data.data == "ArrowUp") {
@@ -23,6 +22,7 @@ class Logic {
     } else {
       findPlayer.StopMovement();
     }
+
     console.log(findPlayer);
   }
 }
