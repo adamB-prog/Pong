@@ -1,14 +1,34 @@
 var canvas;
 var players = [];
+var myID;
+players.push(new Player(0.5, 0.01));
+players.push(new Player(0.5, 0.01));
 window.addEventListener("beforeunload", () => {
   NetworkManager.GetInstance().Disconnect();
 });
 
 function SetupNetwork() {
-  NetworkManager.GetInstance().Connect(window.location.href);
-  NetworkManager.GetInstance().AddListener("welcome", (data) => {
+  let networkManager = NetworkManager.GetInstance();
+  networkManager.Connect(window.location.href);
+  networkManager.AddListener("welcome", (data) => {
     console.log(data);
+    myID = data.playerId;
     NetworkManager.GetInstance().RemoveListener("welcome");
+  });
+
+  networkManager.AddListener("move", (data) => {
+    console.log(data);
+    //if (data.clientIndex == myID) {
+    //  return;
+    //}
+    console.log(players);
+    if (data.movement == "ArrowDown") {
+      players[data.clientIndex - 1].MoveDown();
+    } else if (data.movement == "ArrowUp") {
+      players[data.clientIndex - 1].MoveUp();
+    } else {
+      players[data.clientIndex - 1].StopMovement();
+    }
   });
 }
 
@@ -50,9 +70,18 @@ function setup() {
 function draw() {
   background(0, 0, 0, 50);
   noStroke();
-  rect(0, 0.5 * (canvas.height - 150), 30, 150);
-  rect(width - 30, 0.5 * (canvas.height - 150), 30, 150);
+  rect(0, players[0].y * (canvas.height - 150), 30, 150);
+  rect(width - 30, players[1].y * (canvas.height - 150), 30, 150);
 }
 function windowResized() {
   resizeCanvas(window.innerWidth, window.innerHeight);
 }
+
+function Tick() {
+  players.forEach((player) => {
+    player.Tick();
+  });
+  console.log("tick");
+}
+
+var gameloop = setInterval(Tick, 1000 / 60);
