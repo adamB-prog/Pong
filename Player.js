@@ -1,10 +1,4 @@
 class Player {
-  socketid;
-  lastInput;
-  y;
-  vy;
-  a;
-  #point;
   constructor(socketid) {
     this.socketid = socketid;
 
