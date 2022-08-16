@@ -101,6 +101,9 @@ class ConnectionHandler {
   SendToOneClient(socketid, key, data) {
     this.#io.to(socketid).emit(key, data);
   }
+  SendToEveryone(key, data) {
+    this.#io.emit(key, data);
+  }
 }
 
 module.exports = { ConnectionHandler };
