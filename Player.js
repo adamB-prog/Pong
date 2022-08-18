@@ -8,7 +8,12 @@ class Player {
     this.point = 0;
   }
   Tick() {
-    this.y = this.Clamp(this.y + this.vy, 0, 1);
+    if (this.vy != 0) {
+      this.y = this.Clamp(this.y + this.vy, 0, 1);
+      return true;
+    }
+
+    return false;
   }
   AddPoint(amount) {
     this.point += amount;
