@@ -17,18 +17,7 @@ function SetupNetwork() {
   });
 
   networkManager.AddListener("move", (data) => {
-    console.log(data);
-    //if (data.clientIndex == myID) {
-    //  return;
-    //}
-    console.log(players);
-    if (data.movement == "ArrowDown") {
-      players[data.clientIndex - 1].MoveDown();
-    } else if (data.movement == "ArrowUp") {
-      players[data.clientIndex - 1].MoveUp();
-    } else {
-      players[data.clientIndex - 1].StopMovement();
-    }
+    players[data.clientindex - 1].y = data.y;
   });
 }
 
@@ -41,10 +30,6 @@ function SetupInput() {
     if (inputManager.GetKeys().length == 1)
       networkManager.SendToServer("ActiveInput", inputManager.GetKeys()[0]);
     else networkManager.SendToServer("ActiveInput", null);
-  });
-
-  InputManager.GetInstance().SubscribeToKeyPressed(() => {
-    console.log(InputManager.GetInstance().GetKeys());
   });
 
   InputManager.GetInstance().SubscribeToKeyReleased(() => {
@@ -69,19 +54,17 @@ function setup() {
 
 function draw() {
   background(0, 0, 0, 50);
+
   noStroke();
-  rect(0, players[0].y * (canvas.height - 150), 30, 150);
-  rect(width - 30, players[1].y * (canvas.height - 150), 30, 150);
+
+  rect(0, players[0].y * (canvas.height * 0.86), 30, canvas.height * 0.13);
+  rect(
+    width - 30,
+    players[1].y * (canvas.height * 0.86),
+    30,
+    canvas.height * 0.13
+  );
 }
 function windowResized() {
   resizeCanvas(window.innerWidth, window.innerHeight);
 }
-
-function Tick() {
-  players.forEach((player) => {
-    player.Tick();
-  });
-  console.log("tick");
-}
-
-var gameloop = setInterval(Tick, 1000 / 60);
