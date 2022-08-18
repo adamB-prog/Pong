@@ -3,7 +3,6 @@ class InputManager {
   #allowedKeys;
 
   static #instance = null;
-  //array that acts like the holder for event methods
   static #keyPressed = [];
   static #keyReleased = [];
   constructor() {
@@ -22,7 +21,6 @@ class InputManager {
       let success = this.#OnKeyUp(e.key);
       if (success) {
         InputManager.#keyReleased.forEach((method) => {
-          //trigger all the subscribed methods
           method();
         });
       }
@@ -32,7 +30,6 @@ class InputManager {
 
       if (success) {
         InputManager.#keyPressed.forEach((method) => {
-          //trigger all the subscribed methods
           method();
         });
       }
@@ -47,8 +44,6 @@ class InputManager {
       return true;
     }
 
-    //console.log(this.GetKeys());
-
     return false;
   }
   #OnKeyDown(key) {
@@ -57,7 +52,7 @@ class InputManager {
     }
 
     this.#keys.push(key);
-    //console.log(this.GetKeys());
+
     return true;
   }
   SubscribeToKeyPressed(method) {
