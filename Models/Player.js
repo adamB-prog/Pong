@@ -16,7 +16,9 @@ class Player {
     return false;
   }
   AddPoint(amount) {
-    this.point += amount;
+    if (amount > 0) {
+      this.point += amount;
+    }
   }
 
   MoveDown() {

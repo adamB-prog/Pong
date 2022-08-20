@@ -4,7 +4,9 @@ class PlayerRepository {
   }
 
   AddPlayer(player) {
-    this.players.push(player);
+    if (player.constructor.name == "Player") {
+      this.players.push(player);
+    }
   }
   RemovePlayerById(socketid) {
     this.players = this.players.filter((data) => data.socketid != socketid);
