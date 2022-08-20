@@ -1,10 +1,12 @@
-var connectionHandler = require("./ConnectionHandler");
-var repo = require("./Repositories/PlayerRepository");
-var player = require("./Models/Player");
-var logic = require("./Logic/Logic");
+const connectionHandler = require("./ConnectionHandler");
+const repo = require("./Repositories/PlayerRepository");
+const player = require("./Models/Player");
+const logic = require("./Logic/Logic");
+const ball = require("./Models/Ball");
 
 var players = new repo.PlayerRepository();
-var ingameLogic = new logic.Logic(players);
+var ball = new ball.Ball(0.5, 0.5, 0.01, 0.01, 0.015625, 1, 1);
+var ingameLogic = new logic.Logic(players, ball);
 var server = new connectionHandler.ConnectionHandler(3000, 2);
 
 server.RegisterMiddleWare("ActiveInput", (data) => {
@@ -18,7 +20,12 @@ server.SubscribeOnConnected((socket) => {
 
   server.SendToOneClient(socket.id, "welcome", {
     playerId: playerid,
-    size: 0.13,
+    size: {
+      X: 0.015625,
+      Y: 0.13,
+    },
+    startPos: 0.5,
+    acceleration: 0.01,
   });
 });
 //if there are enough players then start the game
@@ -32,9 +39,16 @@ server.SubscribeOnDisconnected((socket) => {
   players.RemovePlayerById(socket.id);
 });
 //send to clients that movement happened and the necessery information to it
-ingameLogic.SubscribeOnMove((index) => {
-  server.SendToEveryone("move", {
+ingameLogic.SubscribeOnPlayerMove((index, playerY) => {
+  server.SendToEveryone("moveplayer", {
     clientindex: index + 1,
-    y: ingameLogic.playerRepository.GetPlayers()[index].y,
+    y: playerY,
+  });
+});
+
+ingameLogic.SubscribeOnBallMove((ballX, ballY) => {
+  server.SendToEveryone("moveball", {
+    x: ballX,
+    y: ballY,
   });
 });
