@@ -12,8 +12,13 @@ function SetupNetwork() {
   networkManager.AddListener("welcome", (data) => {
     console.log(data);
     myID = data.playerId;
-    players.push(new Player(0.5, 0.01, data.size));
-    players.push(new Player(0.5, 0.01, data.size));
+    players.push(
+      new Player(data.startPos, data.acceleration, data.size.X, data.size.Y)
+    );
+    players.push(
+      new Player(data.startPos, data.acceleration, data.size.X, data.size.Y)
+    );
+    console.log("welcome received");
     NetworkManager.GetInstance().RemoveListener("welcome");
   });
 
@@ -60,15 +65,15 @@ function draw() {
   if (players.length > 0) {
     rect(
       0,
-      players[0].y * (canvas.height * (1 - players[0].size)),
-      30,
-      canvas.height * players[0].size
+      players[0].y * (canvas.height * (1 - players[0].sizeY)),
+      canvas.width * players[0].sizeX,
+      canvas.height * players[0].sizeY
     );
     rect(
-      width - 30,
-      players[1].y * (canvas.height * (1 - players[1].size)),
-      30,
-      canvas.height * players[1].size
+      canvas.width - canvas.width * 0.015625,
+      players[1].y * (canvas.height * (1 - players[1].sizeY)),
+      canvas.width * players[1].sizeY,
+      canvas.height * players[1].sizeY
     );
   }
 }
