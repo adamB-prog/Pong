@@ -1,8 +1,7 @@
 var canvas;
 var players = [];
 var myID;
-players.push(new Player(0.5, 0.01));
-players.push(new Player(0.5, 0.01));
+
 window.addEventListener("beforeunload", () => {
   NetworkManager.GetInstance().Disconnect();
 });
@@ -13,6 +12,8 @@ function SetupNetwork() {
   networkManager.AddListener("welcome", (data) => {
     console.log(data);
     myID = data.playerId;
+    players.push(new Player(0.5, 0.01, data.size));
+    players.push(new Player(0.5, 0.01, data.size));
     NetworkManager.GetInstance().RemoveListener("welcome");
   });
 
@@ -56,14 +57,20 @@ function draw() {
   background(0, 0, 0, 50);
 
   noStroke();
-
-  rect(0, players[0].y * (canvas.height * 0.86), 30, canvas.height * 0.13);
-  rect(
-    width - 30,
-    players[1].y * (canvas.height * 0.86),
-    30,
-    canvas.height * 0.13
-  );
+  if (players.length > 0) {
+    rect(
+      0,
+      players[0].y * (canvas.height * (1 - players[0].size)),
+      30,
+      canvas.height * players[0].size
+    );
+    rect(
+      width - 30,
+      players[1].y * (canvas.height * (1 - players[1].size)),
+      30,
+      canvas.height * players[1].size
+    );
+  }
 }
 function windowResized() {
   resizeCanvas(window.innerWidth, window.innerHeight);
