@@ -1,7 +1,8 @@
 class Player {
-  constructor(y, a, size) {
+  constructor(y, a, sizeX, sizeY) {
     this.y = y;
-    this.size = size;
+    this.sizeX = sizeX;
+    this.sizeY = sizeY;
     this.v = 0;
     this.a = a;
     this.point = 0;
