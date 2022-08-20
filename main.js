@@ -5,8 +5,8 @@ const logic = require("./Logic/Logic");
 const ball = require("./Models/Ball");
 
 var players = new repo.PlayerRepository();
-var ball = new ball.Ball(0.5, 0.5, 0.01, 0.01, 0.015625, 1, 1);
-var ingameLogic = new logic.Logic(players, ball);
+var ingameball = new ball.Ball(0.5, 0.5, 0.01, 0.01, 0.015625, 1, 1);
+var ingameLogic = new logic.Logic(players, ingameball);
 var server = new connectionHandler.ConnectionHandler(3000, 2);
 
 server.RegisterMiddleWare("ActiveInput", (data) => {
