@@ -1,7 +1,7 @@
 var connectionHandler = require("./ConnectionHandler");
-var repo = require("./PlayerRepository");
-var player = require("./Player");
-var logic = require("./Logic");
+var repo = require("./Repositories/PlayerRepository");
+var player = require("./Models/Player");
+var logic = require("./Logic/Logic");
 
 var players = new repo.PlayerRepository();
 var ingameLogic = new logic.Logic(players);
@@ -16,7 +16,10 @@ server.SubscribeOnConnected((socket) => {
   players.AddPlayer(new player.Player(socket.id));
   let playerid = players.GetPlayers().length;
 
-  server.SendToOneClient(socket.id, "welcome", { playerId: playerid });
+  server.SendToOneClient(socket.id, "welcome", {
+    playerId: playerid,
+    size: 0.13,
+  });
 });
 //if there are enough players then start the game
 server.SubscribeOnConnected(() => {
