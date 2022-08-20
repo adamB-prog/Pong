@@ -23,7 +23,7 @@ class Logic {
         this.#TriggerOnPlayerMove(index, player.y);
       }
     });
-    //this.ball.Tick();
+    this.ball.Tick();
     this.#TriggerOnBallMove(this.ball.x, this.ball.y);
   }
   HandleInput(data) {
