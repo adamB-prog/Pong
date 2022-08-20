@@ -6,7 +6,7 @@ class ConnectionHandler {
   #socket;
   #io;
   #maxConnection;
-  //events
+  //events(Observer pattern)
   #onConnected;
   #onDisconnected;
 
@@ -21,7 +21,6 @@ class ConnectionHandler {
       pingTimeout: 1000,
       connectTimeout: 1000,
     });
-
     this.#maxConnection = maxConnection;
     this.#onConnected = [];
     this.#onDisconnected = [];
@@ -41,7 +40,7 @@ class ConnectionHandler {
         console.log(
           `Max number reached(${this.#io.engine.clientsCount}/ ${
             this.#maxConnection
-          }}), disconnected: ${socket.id} `
+          }), disconnected: ${socket.id} `
         );
         return;
       } else {
@@ -84,23 +83,27 @@ class ConnectionHandler {
   SubscribeOnConnected(method) {
     this.#onConnected.push(method);
   }
+  //Subscribe #onDisconnected
   SubscribeOnDisconnected(method) {
     this.#onDisconnected.push(method);
   }
+  //Trigger #onConnected
   #TriggerOnConnected(socket) {
     this.#onConnected.forEach((method) => {
       method(socket);
     });
   }
+  //Trigger #onDisconnected
   #TriggerOnDisconnected(socket) {
     this.#onDisconnected.forEach((method) => {
       method(socket);
     });
   }
-
+  //Send to one client
   SendToOneClient(socketid, key, data) {
     this.#io.to(socketid).emit(key, data);
   }
+  //Broadcast
   SendToEveryone(key, data) {
     this.#io.emit(key, data);
   }
