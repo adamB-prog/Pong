@@ -1,8 +1,11 @@
 class Logic {
-  #onMove;
-  constructor(playerRepository) {
+  #onPlayerMove;
+  #onBallMove;
+  constructor(playerRepository, ball) {
     this.playerRepository = playerRepository;
-    this.#onMove = [];
+    this.ball = ball;
+    this.#onPlayerMove = [];
+    this.#onBallMove = [];
     this.endGame = true;
     this.gameLoop = null;
   }
@@ -17,9 +20,11 @@ class Logic {
       //if a player moved, then notify the subscribers
       let move = player.Tick();
       if (move) {
-        this.#TriggerOnMove(index);
+        this.#TriggerOnPlayerMove(index, player.y);
       }
     });
+    this.ball.Tick();
+    this.#TriggerOnBallMove(this.ball.x, this.ball.y);
   }
   HandleInput(data) {
     const findPlayer = this.playerRepository.FindPlayerById(data.clientid);
@@ -31,12 +36,20 @@ class Logic {
       findPlayer.StopMovement();
     }
   }
-  SubscribeOnMove(method) {
-    this.#onMove.push(method);
+  SubscribeOnPlayerMove(method) {
+    this.#onPlayerMove.push(method);
   }
-  #TriggerOnMove(index) {
-    this.#onMove.forEach((method) => {
-      method(index);
+  #TriggerOnPlayerMove(index, playerY) {
+    this.#onPlayerMove.forEach((method) => {
+      method(index, playerY);
+    });
+  }
+  SubscribeOnBallMove(method) {
+    this.#onBallMove.push(method);
+  }
+  #TriggerOnBallMove(ballX, ballY) {
+    this.#onBallMove.forEach((method) => {
+      method(ballX, ballY);
     });
   }
 }

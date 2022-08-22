@@ -1,5 +1,6 @@
 var canvas;
 var players = [];
+var ball = new Ball(0.5, 0.5, 0.015625);
 var myID;
 
 window.addEventListener("beforeunload", () => {
@@ -12,18 +13,17 @@ function SetupNetwork() {
   networkManager.AddListener("welcome", (data) => {
     console.log(data);
     myID = data.playerId;
-    players.push(
-      new Player(data.startPos, data.acceleration, data.size.X, data.size.Y)
-    );
-    players.push(
-      new Player(data.startPos, data.acceleration, data.size.X, data.size.Y)
-    );
-    console.log("welcome received");
+    players.push(new Player(0.5, 0.01, data.size.X, data.size.Y));
+    players.push(new Player(0.5, 0.01, data.size.X, data.size.Y));
     NetworkManager.GetInstance().RemoveListener("welcome");
   });
 
-  networkManager.AddListener("move", (data) => {
+  networkManager.AddListener("moveplayer", (data) => {
     players[data.clientindex - 1].y = data.y;
+  });
+  networkManager.AddListener("moveball", (data) => {
+    ball.x = data.x;
+    ball.y = data.y;
   });
 }
 
@@ -70,10 +70,15 @@ function draw() {
       canvas.height * players[0].sizeY
     );
     rect(
-      canvas.width - canvas.width * 0.015625,
+      width - canvas.width * players[1].sizeX,
       players[1].y * (canvas.height * (1 - players[1].sizeY)),
-      canvas.width * players[1].sizeY,
+      canvas.width * players[1].sizeX,
       canvas.height * players[1].sizeY
+    );
+    circle(
+      canvas.width * ball.x,
+      canvas.height * ball.y,
+      canvas.width * ball.radius
     );
   }
 }
